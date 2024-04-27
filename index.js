@@ -9,20 +9,20 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const multer = require('multer')
 const uploadMiddleware = multer({ dest: 'uploads/' });
+require('dotenv').config();
 const fs = require('fs');
+const PORT = process.env.PORT || 4000
+
 
 const salt = bcrypt.genSaltSync(10);
-const secret = 'jakdu967836hr3878hu89jy8978';
+const secret = process.env.SECRET_KEY;
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
-const password = process.env.REACT_APP_MONGODB_ATLAS_PASSWORD;
-console.log(password);
-
-mongoose.connect(`mongodb+srv://arjundrag007:${password}@cluster0.fywobxb.mongodb.net/?retryWrites=true&w=majority`);
+mongoose.connect(process.env.MONGODB_ATLAS);
 
 app.post('/register', async (req, res) => {
     const { username, password } = req.body;
@@ -138,6 +138,6 @@ app.get('/post/:id', async (req, res) => {
     res.json(postDoc);
 });
 
-app.listen(4000);
+app.listen(PORT);
 
 
